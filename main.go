@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"math"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -26,14 +27,19 @@ func ping(c *gin.Context) {
 
 func generator(c *gin.Context) {
 	layout := "2006-01-02"
-	qs := c.Query("date")
-	date, err := queryHandler(qs)
+	dqs := c.Query("date")
+	date, err := dateQueryHandler(dqs)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status": false,
-			"error":  err,
-		})
+		sendErrorJson(c, err)
+		return
+	}
+
+	sqs := c.Query("sex")
+	sex, sas, err := sexQueryHandler(sqs)
+
+	if err != nil {
+		sendErrorJson(c, err)
 		return
 	}
 
@@ -41,12 +47,9 @@ func generator(c *gin.Context) {
 	doy := math.Ceil(date.Sub(fdoy).Hours()/24) + 1
 	sn := randomdata.Number(0, 1000)
 	cd := randomdata.Number(0, 10)
-	sex := randomdata.Boolean()
-	sas := "Male"
 
 	if sex == false {
 		doy += 500
-		sas = "Female"
 	}
 
 	onic := generateONIC(date.Year(), doy, sn, cd)
@@ -64,13 +67,20 @@ func generator(c *gin.Context) {
 	})
 }
 
-func queryHandler(ds string) (time.Time, error) {
+func sendErrorJson(c *gin.Context, err error) {
+	c.JSON(http.StatusInternalServerError, gin.H{
+		"status": false,
+		"error":  err.Error(),
+	})
+}
+
+func dateQueryHandler(dqs string) (time.Time, error) {
 	layout := "2006-01-02"
 	date := time.Now()
 	var err error = nil
 
-	if len(ds) > 0 {
-		date, err = time.Parse(layout, ds)
+	if len(dqs) > 0 {
+		date, err = time.Parse(layout, dqs)
 	} else {
 		db18 := time.Now().AddDate(-18, 0, 0).Format(layout)
 		db118 := time.Now().AddDate(-118, 0, 0).Format(layout)
@@ -78,6 +88,31 @@ func queryHandler(ds string) (time.Time, error) {
 	}
 
 	return date, err
+}
+
+func sexQueryHandler(sqs string) (bool, string, error) {
+	sqs = strings.ToLower(sqs)
+
+	switch sqs {
+	case "m":
+		{
+			return true, "Male", nil
+		}
+	case "male":
+		{
+			return true, "Male", nil
+		}
+	case "f":
+		{
+			return false, "Female", nil
+		}
+	case "female":
+		{
+			return false, "Female", nil
+		}
+	default:
+		return false, "", fmt.Errorf("Sex parameter can not be parsed.")
+	}
 }
 
 func generateONIC(year int, doy float64, sn int, cd int) string {
