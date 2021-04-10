@@ -161,8 +161,9 @@ func dateHandler(dns string) (time.Time, int, time.Duration, error) {
 
 func sendErrorJsonValidator(c *gin.Context, err error, code int) {
 	c.JSON(code, gin.H{
-		"status": false,
-		"error":  err.Error(),
-		"code":   http.StatusText(code),
+		"status":         false,
+		"error":          err.Error(),
+		"code":           http.StatusText(code),
+		"validateStatus": false,
 	})
 }
