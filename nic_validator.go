@@ -141,6 +141,9 @@ func dateHandler(dns string) (time.Time, int, time.Duration, error) {
 			return time.Now(), 0, 0, fmt.Errorf("Error occured in day of the year parse.")
 		}
 
+		if doy > 500 {
+			doy -= 500
+		}
 		date = date.AddDate(0, 0, int(doy-1))
 		age := time.Since(date)
 
