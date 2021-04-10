@@ -13,7 +13,7 @@ This is currently ongoing project and hope to improve the functionality lot more
 If you use this component just star it. A developer is more motivated to improve a project when there is some interest.
 
 ## Contributing
-Bug reports and pull requests are welcome on GitHub at https://github.com/randikabanura/activeadmin_google_places.
+Bug reports and pull requests are welcome on GitHub at https://github.com/randikabanura/sri-lanka-nic-generator-validator.
 
 ## License
 The project is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
