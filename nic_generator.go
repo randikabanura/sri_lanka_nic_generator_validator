@@ -16,7 +16,7 @@ func generator(c *gin.Context) {
 	date, err := dateQueryHandler(dqs)
 
 	if err != nil {
-		sendErrorJson(c, err)
+		sendErrorJsonGenerator(c, err)
 		return
 	}
 
@@ -24,7 +24,7 @@ func generator(c *gin.Context) {
 	sex, sas, err := sexQueryHandler(sqs)
 
 	if err != nil {
-		sendErrorJson(c, err)
+		sendErrorJsonGenerator(c, err)
 		return
 	}
 
@@ -52,7 +52,7 @@ func generator(c *gin.Context) {
 	})
 }
 
-func sendErrorJson(c *gin.Context, err error) {
+func sendErrorJsonGenerator(c *gin.Context, err error) {
 	c.JSON(http.StatusInternalServerError, gin.H{
 		"status": false,
 		"error":  err.Error(),

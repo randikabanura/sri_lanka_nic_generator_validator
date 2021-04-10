@@ -11,6 +11,7 @@ func main() {
 	r.GET("/", ping)
 	r.GET("/ping", ping)
 	r.GET("/generator", generator)
+	r.GET("/validator", validator)
 	r.Run(":3000")
 }
 
