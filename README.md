@@ -46,6 +46,20 @@ to generate NIC number according to the parameters. These params includes the fo
   "sn": 107,
   "status": true
 }
+
+// http://localhost:3000/generator?date=1996-06-03&sex=m
+// Usage of the both sex and date param
+
+{
+  "cd": 6,
+  "date": "1996-06-03",
+  "doy": 155,
+  "nnic": "199615506166",
+  "onic": "961556166V",
+  "sex": "Male",
+  "sn": 616,
+  "status": true
+}
 ```
 
 ## Do you like it? Star it!
