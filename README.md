@@ -29,7 +29,10 @@ to generate NIC number according to the parameters. These params includes the fo
   "nnic": "19483580944",
   "onic": "48358944V",
   "sex": "Male",
-  "sn": 94,
+  "sn": {
+    "new": "0094",
+    "old": "094"
+  },
   "status": true
 }
 
@@ -43,7 +46,10 @@ to generate NIC number according to the parameters. These params includes the fo
   "nnic": "199563701074",
   "onic": "956371074V",
   "sex": "Female",
-  "sn": 107,
+  "sn": {
+    "new": "0107",
+    "old": "107"
+  },
   "status": true
 }
 
@@ -57,7 +63,10 @@ to generate NIC number according to the parameters. These params includes the fo
   "nnic": "199615506166",
   "onic": "961556166V",
   "sex": "Male",
-  "sn": 616,
+  "sn": {
+    "new": "0616",
+    "old": "616"
+  },
   "status": true
 }
 ```

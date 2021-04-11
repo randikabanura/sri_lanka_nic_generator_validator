@@ -45,11 +45,14 @@ func generator(c *gin.Context) {
 		"status": true,
 		"date":   date.Format(layout),
 		"doy":    doy,
-		"sn":     sn,
-		"cd":     cd,
-		"sex":    sas,
-		"onic":   onic, // Old nic version
-		"nnic":   nnic, // New nic version
+		"sn": gin.H{
+			"old": fmt.Sprint(sn),
+			"new": fmt.Sprintf("0%v", sn),
+		},
+		"cd":   cd,
+		"sex":  sas,
+		"onic": onic, // Old nic version
+		"nnic": nnic, // New nic version
 	})
 }
 
