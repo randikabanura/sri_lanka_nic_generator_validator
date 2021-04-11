@@ -181,3 +181,9 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/randik
 
 ## License
 The software is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+## Developer
+Name: [Banura Randika Perera](https://github.com/randikabanura) <br/>
+Linkedin: [randika-banura](https://www.linkedin.com/in/randika-banura/) <br/>
+Email: [randika.banura@gamil.com](mailto:randika.banura@gamil.com) <br/>
+Bsc (Hons) Information Technology specialized in Software Engineering (SLIIT)
