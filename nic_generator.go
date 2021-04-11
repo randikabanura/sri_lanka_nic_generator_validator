@@ -138,7 +138,7 @@ func sexQueryHandler(sqs string) (bool, string, error) {
 
 // Generate old nic version according to year, day of the year, serial number and check digit
 func generateONIC(year int, doy float64, sn int, cd int) string {
-	if sn > 999 {
+	if sn > 999 || year > 2000 {
 		return ""
 	}
 
