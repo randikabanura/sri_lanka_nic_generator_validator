@@ -17,6 +17,21 @@ to generate NIC number according to the parameters. These params includes the fo
   * sex - f, female, m , male
   * date - date of which NIC holder is born (Ex: 1995-05-17)
 
+#### Provinces
+API is returning a province which includes a number and a name. This province name or number does not
+relate to NIC number itself. This is given because Old NIC type had a number indicating the province in the 
+physical NIC. List of the provinces, and the numbers as follows:
+
+  1. Western Province
+  2. Central Province
+  3. Southern Province
+  4. Northern Province
+  5. Eastern Province
+  6. North Western Province
+  7. North Central Province
+  8. Uva Province
+  9. Sabaragahmuwa Province
+
 #### Examples
 ```json
 // http://localhost:3000/v1/generator?sex=male
@@ -28,6 +43,10 @@ to generate NIC number according to the parameters. These params includes the fo
   "doy": 358,
   "nnic": "19483580944",
   "onic": "48358944V",
+  "province": {
+    "name": "Western Province",
+    "number": 1
+  },
   "sex": "Male",
   "sn": {
     "new": "0094",
@@ -45,6 +64,10 @@ to generate NIC number according to the parameters. These params includes the fo
   "doy": 137,
   "nnic": "199563701074",
   "onic": "956371074V",
+  "province": {
+    "name": "Southern Province",
+    "number": 3
+  },
   "sex": "Female",
   "sn": {
     "new": "0107",
@@ -62,6 +85,10 @@ to generate NIC number according to the parameters. These params includes the fo
   "doy": 155,
   "nnic": "199615506166",
   "onic": "961556166V",
+  "province": {
+    "name": "Western Province",
+    "number": 1
+  },
   "sex": "Male",
   "sn": {
     "new": "0616",

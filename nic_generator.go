@@ -13,6 +13,8 @@ import (
 func generator(c *gin.Context) {
 	layout := "2006-01-02"
 	dqs := c.Query("date")
+	provinces := []string{"Western", "Central", "Southern", "Northern", "Eastern", "North Western", "North Central", "Uva", "Sabaragahmuwa"}
+
 	date, err := dateQueryHandler(dqs) // Date query string
 
 	if err != nil {
@@ -57,6 +59,9 @@ func generator(c *gin.Context) {
 		nsn = ""
 	}
 
+	pn := randomdata.Number(0, 9)                   // Province number. This is not associated with the NIC number
+	ps := fmt.Sprintf("%v Province", provinces[pn]) // String of province
+
 	c.JSON(http.StatusOK, gin.H{
 		"status": true,
 		"date":   date.Format(layout),
@@ -69,6 +74,10 @@ func generator(c *gin.Context) {
 		"sex":  sas,
 		"onic": onic, // Old nic version
 		"nnic": nnic, // New nic version
+		"province": gin.H{ // Province is not associated with the NIC number
+			"number": pn + 1,
+			"name":   ps,
+		},
 	})
 }
 
