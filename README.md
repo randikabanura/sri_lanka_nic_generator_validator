@@ -19,7 +19,7 @@ to generate NIC number according to the parameters. These params includes the fo
 
 #### Examples
 ```json
-// http://localhost:3000/generator?sex=male
+// http://localhost:3000/v1/generator?sex=male
 // Usage of the sex param
 
 {
@@ -36,7 +36,7 @@ to generate NIC number according to the parameters. These params includes the fo
   "status": true
 }
 
-// http://localhost:3000/generator?date=1995-05-17
+// http://localhost:3000/v1/generator?date=1995-05-17
 // Usage of the date param
 
 {
@@ -53,7 +53,7 @@ to generate NIC number according to the parameters. These params includes the fo
   "status": true
 }
 
-// http://localhost:3000/generator?date=1996-06-03&sex=m
+// http://localhost:3000/v1/generator?date=1996-06-03&sex=m
 // Usage of the both sex and date param
 
 {
@@ -69,6 +69,25 @@ to generate NIC number according to the parameters. These params includes the fo
   },
   "status": true
 }
+
+// http://localhost:3000/v1/generator?date=2005-05-17
+// Usage of if birthday is in or after year 2000
+// Note that if the birthday is in or after year 2000,
+// response will not have onic (Old NIC) and Old serial number
+
+{
+  "cd": 4,
+  "date": "2005-05-17",
+  "doy": 137,
+  "nnic": "200563797534",
+  "onic": "",
+  "sex": "Female",
+  "sn": {
+    "new": "9753",
+    "old": ""
+  },
+  "status": true
+}
 ```
 
 ### NIC validator
@@ -79,30 +98,50 @@ both new of old version of the NIC in sri lanka
 #### Examples
 
 ```json
-// http://localhost:3000/validator?nic=956380995V
+// http://localhost:3000/v1/validator?nic=956380995V
 // Using old version of the NIC
 
 {
   "age": "25 years 47 weeks 6 days",
+  "cd": 5,
   "date": "1995-05-18",
   "doy": 138,
   "sex": "Female",
   "status": true,
+  "sn": {
+    "new": "0099",
+    "old": "099"
+  },
   "validateStatus": true,
   "version": "Old"
 }
 
-// http://localhost:3000/validator?nic=199615500343
+// http://localhost:3000/v1/validator?nic=199615500343
 // Using new version of the NIC
 
 {
   "age": "24 years 45 weeks 3 days",
+  "cd": 3,
   "date": "1996-06-03",
   "doy": 155,
   "sex": "Male",
+  "sn": {
+    "new": "0034",
+    "old": "034"
+  },
   "status": true,
   "validateStatus": true,
   "version": "New"
+}
+
+// http://localhost:3000/v1/validator?nic=9563809s95V
+// Response when NIC is not valid
+
+{
+  "code": "Bad Request",
+  "error": "nic parameter value is incorrect.",
+  "status": false,
+  "validateStatus": false
 }
 
 ```
@@ -114,4 +153,4 @@ If you use this component just star it. A developer is more motivated to improve
 Bug reports and pull requests are welcome on GitHub at https://github.com/randikabanura/sri-lanka-nic-generator-validator.
 
 ## License
-The project is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+The software is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

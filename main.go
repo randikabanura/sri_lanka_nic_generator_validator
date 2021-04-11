@@ -9,9 +9,14 @@ func main() {
 	r := gin.Default()
 
 	r.GET("/", ping)
-	r.GET("/ping", ping)
-	r.GET("/generator", generator)
-	r.GET("/validator", validator)
+	v1 := r.Group("/v1")
+	{
+		v1.GET("/", ping)
+		v1.GET("/ping", ping)
+		v1.GET("/generator", generator)
+		v1.GET("/validator", validator)
+	}
+
 	r.Run(":3000")
 }
 

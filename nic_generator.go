@@ -30,8 +30,13 @@ func generator(c *gin.Context) {
 
 	fdoy := time.Date(date.Year(), 1, 1, 0, 0, 0, 0, time.UTC) // First day of the year
 	doy := math.Ceil(date.Sub(fdoy).Hours()/24) + 1            // Day of the year
-	sn := randomdata.Number(0, 1000)                           // Serial number
-	cd := randomdata.Number(0, 10)                             // Check digit
+
+	sn := randomdata.Number(0, 1000) // Serial number
+	if date.Year() >= 2000 {
+		sn = randomdata.Number(0, 10000)
+	}
+
+	cd := randomdata.Number(0, 10) // Check digit
 
 	sdoy := doy // Day of the year according to sex
 	if sex == false {
@@ -39,15 +44,26 @@ func generator(c *gin.Context) {
 	}
 
 	onic := generateONIC(date.Year(), sdoy, sn, cd)
+	osn := fmt.Sprintf("%03d", sn) // Old serial number
+	if len(onic) != 10 {
+		onic = ""
+		osn = ""
+	}
+
 	nnic := generateNNIC(date.Year(), sdoy, sn, cd)
+	nsn := fmt.Sprintf("%04d", sn) // New serial number
+	if len(nnic) != 12 {
+		nnic = ""
+		nsn = ""
+	}
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": true,
 		"date":   date.Format(layout),
 		"doy":    doy,
 		"sn": gin.H{
-			"old": fmt.Sprintf("%03d", sn),
-			"new": fmt.Sprintf("%04d", sn),
+			"old": osn, // Old serial number
+			"new": nsn, // New serial number
 		},
 		"cd":   cd,
 		"sex":  sas,
@@ -74,8 +90,8 @@ func dateQueryHandler(dqs string) (time.Time, error) {
 	if len(dqs) > 0 {
 		date, err = time.Parse(layout, dqs)
 	} else {
-		db18 := time.Now().AddDate(-18, 0, 0).Format(layout)
-		db118 := time.Now().AddDate(-118, 0, 0).Format(layout)
+		db18 := time.Now().AddDate(-18, 0, 0).Format(layout)   // Date 18 years before today
+		db118 := time.Now().AddDate(-118, 0, 0).Format(layout) // Date 118 years before today
 		date, err = time.Parse("Monday 2 Jan 2006", randomdata.FullDateInRange(db118, db18))
 	}
 
@@ -113,6 +129,10 @@ func sexQueryHandler(sqs string) (bool, string, error) {
 
 // Generate old nic version according to year, day of the year, serial number and check digit
 func generateONIC(year int, doy float64, sn int, cd int) string {
+	if sn > 999 {
+		return ""
+	}
+
 	sy := year % 100
 	ssy := fmt.Sprintf("%v", sy)
 

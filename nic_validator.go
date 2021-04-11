@@ -11,7 +11,7 @@ import (
 
 func validator(c *gin.Context) {
 	layout := "2006-01-02"
-	dns := c.Query("nic")
+	dns := c.Query("nic") // Data NIC string
 	val18 := c.Query("val18")
 
 	if val18 != "false" && val18 != "0" {
@@ -51,16 +51,79 @@ func validator(c *gin.Context) {
 		return
 	}
 
+	sn, err := serialNumberHandler(dns)
+
+	if err != nil {
+		sendErrorJsonValidator(c, err, http.StatusBadRequest)
+		return
+	}
+
+	cd, err := checkDigitHandler(dns)
+
+	if err != nil {
+		sendErrorJsonValidator(c, err, http.StatusBadRequest)
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"status":         true,
-		"date":           date.Format(layout),
-		"doy":            doy,
-		"age":            fage.LimitFirstN(3).String(),
-		"version":        version,
-		"sex":            sex,
+		"status":  true,
+		"date":    date.Format(layout),
+		"doy":     doy,
+		"age":     fage.LimitFirstN(3).String(),
+		"version": version,
+		"sex":     sex,
+		"sn": gin.H{
+			"old": fmt.Sprintf("%03d", sn),
+			"new": fmt.Sprintf("%04d", sn),
+		},
+		"cd":             cd,
 		"validateStatus": true,
 	})
 
+}
+
+func checkDigitHandler(dns string) (int, error) {
+	if len(dns) == 10 {
+		cd, errCheckDigitParse := strconv.ParseInt(string(dns[8]), 0, 64) // Check digit
+
+		if errCheckDigitParse != nil {
+			return 0, fmt.Errorf("Error occured in check digit parse.")
+		}
+
+		return int(cd), nil
+	} else if len(dns) == 12 {
+		cd, errCheckDigitParse := strconv.ParseInt(string(dns[len(dns)-1]), 0, 64) // Check digit
+
+		if errCheckDigitParse != nil {
+			return 0, fmt.Errorf("Error occured in check digit parse.")
+		}
+
+		return int(cd), nil
+	} else {
+		return 0, fmt.Errorf("Error occured on check digit handler.")
+	}
+}
+
+func serialNumberHandler(dns string) (int, error) {
+	if len(dns) == 10 {
+		sn, errSerialNumberParse := strconv.ParseInt(dns[5:8], 10, 64) // Serial Number
+
+		if errSerialNumberParse != nil {
+			return 0, fmt.Errorf("Error occured in serial number parse.")
+		}
+
+		return int(sn), nil
+	} else if len(dns) == 12 {
+		sn, errSerialNumberParse := strconv.ParseInt(dns[7:11], 10, 64) // Serial Number
+
+		if errSerialNumberParse != nil {
+			return 0, fmt.Errorf("Error occured in serial number parse.")
+		}
+
+		return int(sn), nil
+	} else {
+		return 0, fmt.Errorf("Error occured on serial number handler.")
+	}
 }
 
 func sexCheck(dns string) (string, error) {
