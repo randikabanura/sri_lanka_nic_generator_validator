@@ -13,14 +13,14 @@ import (
 func generator(c *gin.Context) {
 	layout := "2006-01-02"
 	dqs := c.Query("date")
-	date, err := dateQueryHandler(dqs)
+	date, err := dateQueryHandler(dqs) // Date query string
 
 	if err != nil {
 		sendErrorJsonGenerator(c, err, http.StatusBadRequest)
 		return
 	}
 
-	sqs := c.Query("sex")
+	sqs := c.Query("sex") // Sex query string
 	sex, sas, err := sexQueryHandler(sqs)
 
 	if err != nil {
@@ -28,10 +28,10 @@ func generator(c *gin.Context) {
 		return
 	}
 
-	fdoy := time.Date(date.Year(), 1, 1, 0, 0, 0, 0, time.UTC)
-	doy := math.Ceil(date.Sub(fdoy).Hours()/24) + 1
-	sn := randomdata.Number(0, 1000)
-	cd := randomdata.Number(0, 10)
+	fdoy := time.Date(date.Year(), 1, 1, 0, 0, 0, 0, time.UTC) // First day of the year
+	doy := math.Ceil(date.Sub(fdoy).Hours()/24) + 1            // Day of the year
+	sn := randomdata.Number(0, 1000)                           // Serial number
+	cd := randomdata.Number(0, 10)                             // Check digit
 
 	sdoy := doy // Day of the year according to sex
 	if sex == false {
@@ -48,11 +48,12 @@ func generator(c *gin.Context) {
 		"sn":     sn,
 		"cd":     cd,
 		"sex":    sas,
-		"onic":   onic,
-		"nnic":   nnic,
+		"onic":   onic, // Old nic version
+		"nnic":   nnic, // New nic version
 	})
 }
 
+// Handle error response if any error occurred for generator
 func sendErrorJsonGenerator(c *gin.Context, err error, code int) {
 	c.JSON(code, gin.H{
 		"status": false,
@@ -61,6 +62,7 @@ func sendErrorJsonGenerator(c *gin.Context, err error, code int) {
 	})
 }
 
+// Handles a date query param. If not available it auto generate random date
 func dateQueryHandler(dqs string) (time.Time, error) {
 	layout := "2006-01-02"
 	date := time.Now()
@@ -77,6 +79,7 @@ func dateQueryHandler(dqs string) (time.Time, error) {
 	return date, err
 }
 
+// Handles the sex query param and return a boolean, string and error
 func sexQueryHandler(sqs string) (bool, string, error) {
 	sqs = strings.ToLower(sqs)
 
@@ -112,6 +115,7 @@ func sexQueryHandler(sqs string) (bool, string, error) {
 	}
 }
 
+// Generate old nic version according to year, day of the year, serial number and check digit
 func generateONIC(year int, doy float64, sn int, cd int) string {
 	sy := year % 100
 	ssy := fmt.Sprintf("%v", sy)
@@ -123,6 +127,7 @@ func generateONIC(year int, doy float64, sn int, cd int) string {
 	return fmt.Sprintf("%v%.0f%d%d%v", ssy, doy, sn, cd, "V")
 }
 
+// Generate new nic version according to year, day of the year, serial number and check digit
 func generateNNIC(year int, doy float64, sn int, cd int) string {
 	return fmt.Sprintf("%d%.0f0%d%d", year, doy, sn, cd)
 }
