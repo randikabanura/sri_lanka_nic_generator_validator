@@ -46,8 +46,8 @@ func generator(c *gin.Context) {
 		"date":   date.Format(layout),
 		"doy":    doy,
 		"sn": gin.H{
-			"old": fmt.Sprint(sn),
-			"new": fmt.Sprintf("0%v", sn),
+			"old": fmt.Sprintf("%03d", sn),
+			"new": fmt.Sprintf("%04d", sn),
 		},
 		"cd":   cd,
 		"sex":  sas,
@@ -120,10 +120,10 @@ func generateONIC(year int, doy float64, sn int, cd int) string {
 		ssy = fmt.Sprintf("0%v", sy)
 	}
 
-	return fmt.Sprintf("%v%.0f%d%d%v", ssy, doy, sn, cd, "V")
+	return fmt.Sprintf("%v%.0f%03d%d%v", ssy, doy, sn, cd, "V")
 }
 
 // Generate new nic version according to year, day of the year, serial number and check digit
 func generateNNIC(year int, doy float64, sn int, cd int) string {
-	return fmt.Sprintf("%d%.0f0%d%d", year, doy, sn, cd)
+	return fmt.Sprintf("%d%.0f%04d%d", year, doy, sn, cd)
 }
