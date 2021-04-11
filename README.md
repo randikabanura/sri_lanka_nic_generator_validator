@@ -62,6 +62,42 @@ to generate NIC number according to the parameters. These params includes the fo
 }
 ```
 
+### NIC validator
+For validation of the NIC call ```/validator``` endpoint. It must have a ```nic``` parameter.
+Otherwise it will return an error saying that ```nic``` parameter is empty. NIC that send in the parameter ```nic``` could be
+both new of old version of the NIC in sri lanka
+
+#### Examples
+
+```json
+// http://localhost:3000/validator?nic=956380995V
+// Using old version of the NIC
+
+{
+  "age": "25 years 47 weeks 6 days",
+  "date": "1995-05-18",
+  "doy": 138,
+  "sex": "Female",
+  "status": true,
+  "validateStatus": true,
+  "version": "Old"
+}
+
+// http://localhost:3000/validator?nic=199615500343
+// Using new version of the NIC
+
+{
+  "age": "24 years 45 weeks 3 days",
+  "date": "1996-06-03",
+  "doy": 155,
+  "sex": "Male",
+  "status": true,
+  "validateStatus": true,
+  "version": "New"
+}
+
+```
+
 ## Do you like it? Star it!
 If you use this component just star it. A developer is more motivated to improve a project when there is some interest.
 
