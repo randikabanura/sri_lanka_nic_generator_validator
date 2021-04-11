@@ -84,27 +84,20 @@ func sexQueryHandler(sqs string) (bool, string, error) {
 	sqs = strings.ToLower(sqs)
 
 	switch sqs {
-	case "m":
+	case "m", "male":
 		{
 			return true, "Male", nil
 		}
-	case "male":
-		{
-			return true, "Male", nil
-		}
-	case "f":
-		{
-			return false, "Female", nil
-		}
-	case "female":
+	case "f", "female":
 		{
 			return false, "Female", nil
 		}
 	case "":
 		{
-			rs := randomdata.Boolean()
-			rss := "Male"
+			rs := randomdata.Boolean() // Random sex boolean
+			rss := "Male"              // initialize the the sex string
 
+			// Change the sex string if rs is false
 			if rs == false {
 				rss = "Female"
 			}
