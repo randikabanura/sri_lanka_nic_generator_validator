@@ -33,12 +33,13 @@ func generator(c *gin.Context) {
 	sn := randomdata.Number(0, 1000)
 	cd := randomdata.Number(0, 10)
 
+	sdoy := doy // Day of the year according to sex
 	if sex == false {
-		doy += 500
+		sdoy += 500
 	}
 
-	onic := generateONIC(date.Year(), doy, sn, cd)
-	nnic := generateNNIC(date.Year(), doy, sn, cd)
+	onic := generateONIC(date.Year(), sdoy, sn, cd)
+	nnic := generateNNIC(date.Year(), sdoy, sn, cd)
 
 	c.JSON(http.StatusOK, gin.H{
 		"status": true,
