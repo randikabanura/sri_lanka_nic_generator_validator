@@ -1,11 +1,16 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
 	"github.com/Pallinder/go-randomdata"
+	"github.com/boombuler/barcode/pdf417"
 	"github.com/gin-gonic/gin"
+	"image/png"
+	"io/ioutil"
 	"math"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -46,7 +51,6 @@ func generator(c *gin.Context) {
 	}
 
 	onic := generateONIC(date.Year(), sdoy, sn, cd)
-	fmt.Println(onic, sdoy, sn, cd)
 	osn := fmt.Sprintf("%03d", sn) // Old serial number
 	if len(onic) != 10 {
 		onic = ""
@@ -55,9 +59,17 @@ func generator(c *gin.Context) {
 
 	nnic := generateNNIC(date.Year(), sdoy, sn, cd)
 	nsn := fmt.Sprintf("%04d", sn) // New serial number
+	barcode := ""
+	barcodeContent := ""
 	if len(nnic) != 12 {
 		nnic = ""
 		nsn = ""
+	} else {
+		barcodeContent, barcode, err = generateBarcodeForNNIC(nnic, date, sas)
+		if err != nil {
+			sendErrorJsonGenerator(c, err, http.StatusBadRequest)
+			return
+		}
 	}
 
 	pn := randomdata.Number(0, 9)                   // Province number. This is not associated with the NIC number
@@ -78,6 +90,10 @@ func generator(c *gin.Context) {
 		"province": gin.H{ // Province is not associated with the NIC number
 			"number": pn + 1,
 			"name":   ps,
+		},
+		"barcode": gin.H{
+			"content": barcodeContent,
+			"image":   barcode,
 		},
 	})
 }
@@ -156,4 +172,93 @@ func generateONIC(year int, doy int, sn int, cd int) string {
 // Generate new nic version according to year, day of the year, serial number and check digit
 func generateNNIC(year int, doy int, sn int, cd int) string {
 	return fmt.Sprintf("%d%03d%04d%d", year, doy, sn, cd)
+}
+
+// Generate the pdf417 barcode for the new NIC number
+func generateBarcodeForNNIC(nnic string, date time.Time, sas string) (string, string, error) {
+	layoutOne := "2006-01-02"
+	layoutTwo := "02/01/2006"
+	fullName := ""
+	if sas == "Male" {
+		fullName = randomdata.FullName(randomdata.Male)
+	} else {
+		fullName = randomdata.FullName(randomdata.Female)
+	}
+
+	db := date.Format(layoutOne)
+	db16 := date.AddDate(16, 0, 0).Format(layoutOne) // Date 16 years after today
+	createdDate, err := time.Parse("Monday 2 Jan 2006", randomdata.FullDateInRange(db, db16))
+	if err != nil {
+		return "", "", err
+	}
+
+	barcodeStr := "00\n" +
+		nnic + "\n" +
+		date.Format(layoutTwo) + "\n" +
+		sas + "\n" +
+		createdDate.Format(layoutOne) + "\n" +
+		"00BFT-710\n" +
+		fullName + "\n" +
+		randomdata.Address() + "\n" +
+		randomdata.City() + "\n" +
+		"485406C0548FDD8FDDF300F312EE947D#"
+
+	currentTime := time.Now().Unix()
+
+	pdf417Code, err := pdf417.Encode(barcodeStr, 0)
+	if err != nil {
+		return "", "", err
+	}
+
+	// create the output file
+	file, err := os.Create(fmt.Sprintf("barcode-%v.png", currentTime))
+	if err != nil {
+		return "", "", err
+	}
+
+	defer file.Close()
+
+	err = png.Encode(file, pdf417Code)
+	if err != nil {
+		return "", "", err
+	}
+
+	bytes, err := ioutil.ReadFile(fmt.Sprintf("./barcode-%v.png", currentTime))
+	if err != nil {
+		return "", "", err
+	}
+
+	err = os.Remove(fmt.Sprintf("barcode-%v.png", currentTime))
+	if err != nil {
+		return "", "", err
+	}
+
+	mimeType := http.DetectContentType(bytes)
+
+	// Prepend the appropriate URI scheme header depending
+	// on the MIME type
+	base64Encoding := getMimeType(mimeType)
+
+	// Append the base64 encoded output
+	base64Encoding += toBase64(bytes)
+
+	// Print the full base64 representation of the image
+	return pdf417Code.Content(), base64Encoding, nil
+}
+
+func toBase64(b []byte) string {
+	return base64.StdEncoding.EncodeToString(b)
+}
+
+func getMimeType(mimetype string) string {
+	base64Encoding := ""
+
+	switch mimetype {
+	case "image/jpeg":
+		base64Encoding = "data:image/jpeg;base64,"
+	case "image/png":
+		base64Encoding = "data:image/png;base64,"
+	}
+
+	return base64Encoding
 }
