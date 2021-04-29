@@ -31,7 +31,7 @@ func generator(c *gin.Context) {
 	}
 
 	fdoy := time.Date(date.Year(), 1, 1, 0, 0, 0, 0, time.UTC) // First day of the year
-	doy := math.Ceil(date.Sub(fdoy).Hours()/24) + 1            // Day of the year
+	doy := int(math.Ceil(date.Sub(fdoy).Hours()/24) + 1)       // Day of the year
 
 	sn := randomdata.Number(0, 1000) // Serial number
 	if date.Year() >= 2000 {
@@ -46,6 +46,7 @@ func generator(c *gin.Context) {
 	}
 
 	onic := generateONIC(date.Year(), sdoy, sn, cd)
+	fmt.Println(onic, sdoy, sn, cd)
 	osn := fmt.Sprintf("%03d", sn) // Old serial number
 	if len(onic) != 10 {
 		onic = ""
@@ -137,7 +138,7 @@ func sexQueryHandler(sqs string) (bool, string, error) {
 }
 
 // Generate old nic version according to year, day of the year, serial number and check digit
-func generateONIC(year int, doy float64, sn int, cd int) string {
+func generateONIC(year int, doy int, sn int, cd int) string {
 	if sn > 999 || year > 2000 {
 		return ""
 	}
@@ -149,10 +150,10 @@ func generateONIC(year int, doy float64, sn int, cd int) string {
 		ssy = fmt.Sprintf("0%v", sy)
 	}
 
-	return fmt.Sprintf("%v%.0f%03d%d%v", ssy, doy, sn, cd, "V")
+	return fmt.Sprintf("%v%03d%03d%d%v", ssy, doy, sn, cd, "V")
 }
 
 // Generate new nic version according to year, day of the year, serial number and check digit
-func generateNNIC(year int, doy float64, sn int, cd int) string {
-	return fmt.Sprintf("%d%.0f%04d%d", year, doy, sn, cd)
+func generateNNIC(year int, doy int, sn int, cd int) string {
+	return fmt.Sprintf("%d%03d%04d%d", year, doy, sn, cd)
 }
