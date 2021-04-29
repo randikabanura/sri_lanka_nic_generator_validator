@@ -54,7 +54,7 @@ physical NIC. List of the provinces, and the numbers as follows:
   },
   "status": true,
   "barcode": {
-    "content": "00\n199427605649\n03/10/1994\nMale\n2005-03-20\n00BFT-710\nJacob Moore\n47 Jefferson St,\nBury, WA, 11204\nCampden\n485406C0548FDD8FDDF300F312EE947D#",
+    "content": "00\n199427605649\n03/10/1994\nMale\n2005-03-20.........",
     "image": "data:image/png;base64,iVBORw0...."
   }
 }
@@ -79,7 +79,7 @@ physical NIC. List of the provinces, and the numbers as follows:
   },
   "status": true,
   "barcode": {
-    "content": "00\n199427605649\n03/10/1994\nMale\n2005-03-20\n00BFT-710\nJacob Moore\n47 Jefferson St,\nBury, WA, 11204\nCampden\n485406C0548FDD8FDDF300F312EE947D#",
+    "content": "00\n199427605649\n03/10/1994\nMale\n2005-03-20.........",
     "image": "data:image/png;base64,iVBORw0...."
   }
 }
@@ -104,7 +104,7 @@ physical NIC. List of the provinces, and the numbers as follows:
   },
   "status": true,
   "barcode": {
-    "content": "00\n199427605649\n03/10/1994\nMale\n2005-03-20\n00BFT-710\nJacob Moore\n47 Jefferson St,\nBury, WA, 11204\nCampden\n485406C0548FDD8FDDF300F312EE947D#",
+    "content": "00\n199427605649\n03/10/1994\nMale\n2005-03-20.........",
     "image": "data:image/png;base64,iVBORw0...."
   }
 }
@@ -127,7 +127,7 @@ physical NIC. List of the provinces, and the numbers as follows:
   },
   "status": true,
   "barcode": {
-    "content": "00\n199427605649\n03/10/1994\nMale\n2005-03-20\n00BFT-710\nJacob Moore\n47 Jefferson St,\nBury, WA, 11204\nCampden\n485406C0548FDD8FDDF300F312EE947D#",
+    "content": "00\n199427605649\n03/10/1994\nMale\n2005-03-20.........",
     "image": "data:image/png;base64,iVBORw0...."
   }
 }
