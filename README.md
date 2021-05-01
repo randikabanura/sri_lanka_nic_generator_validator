@@ -6,7 +6,7 @@ This project also utilize Few Go packages including:
   * [Gin Web Framework](https://github.com/gin-gonic/) - For API implementation
   * [durafmt](https://github.com/hako/durafmt) - For getting duration between Times
   * [go-randomdata](https://github.com/Pallinder/go-randomdata) - For getting random Int, Boolean, Times
-  * [barcode](https://github.com/boombuler/barcode) - For generating the PDF417 barcode that in the NIC version introduce in 2016
+  * [barcode](https://github.com/boombuler/barcode) - For generating the PDF417 barcode that in the NIC version introduced in 2016
 
 This is currently ongoing project and hope to improve the functionality lot more.
 
