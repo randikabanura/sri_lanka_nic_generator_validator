@@ -6,13 +6,14 @@ This project also utilize Few Go packages including:
   * [Gin Web Framework](https://github.com/gin-gonic/) - For API implementation
   * [durafmt](https://github.com/hako/durafmt) - For getting duration between Times
   * [go-randomdata](https://github.com/Pallinder/go-randomdata) - For getting random Int, Boolean, Times
+  * [barcode](https://github.com/boombuler/barcode) - For generating the PDF417 barcode that in the NIC version introduce in 2016
 
 This is currently ongoing project and hope to improve the functionality lot more.
 
 ## Usage
 
 ### NIC generator
-For generation of and NIC call ```/generator``` endpoint. It has a few query params it could take
+For generation of and NIC call ```/v1/generator``` endpoint. It has a few query params it could take
 to generate NIC number according to the parameters. These params includes the following:
   * sex - f, female, m , male
   * date - date of which NIC holder is born (Ex: 1995-05-17)
@@ -134,7 +135,7 @@ physical NIC. List of the provinces, and the numbers as follows:
 ```
 
 ### NIC validator
-For validation of the NIC call ```/validator``` endpoint. It must have a ```nic``` parameter.
+For validation of the NIC call ```/v1/validator``` endpoint. It must have a ```nic``` parameter.
 Otherwise it will return an error saying that ```nic``` parameter is empty. NIC that send in the parameter ```nic``` could be
 both new of old version of the NIC in sri lanka
 
